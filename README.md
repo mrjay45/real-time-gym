@@ -83,21 +83,35 @@ Then:
 
 ## 🛠️ Technologies
 
-<table>
-  <tr>
-    <td align="center"><img src="https://flask.palletsprojects.com/en/2.0.x/_static/flask-icon.png" width="40"/><br />Flask</td>
-    <td align="center"><img src="https://opencv.org/wp-content/uploads/2020/07/OpenCV_logo_no_text-1.png" width="40"/><br />OpenCV</td>
-    <td align="center"><img src="https://developers.google.com/static/mediapipe/images/mediapipe.png" width="40"/><br />MediaPipe</td>
-    <td align="center"><img src="https://numpy.org/images/logo.svg" width="40"/><br />NumPy</td>
-  </tr>
-</table>
+- ![Flask](https://img.shields.io/badge/-Flask-000000?style=flat&logo=flask)
+- ![OpenCV](https://img.shields.io/badge/-OpenCV-5C3EE8?style=flat&logo=opencv)
+- ![MediaPipe](https://img.shields.io/badge/-MediaPipe-00FF00?style=flat)
+- ![NumPy](https://img.shields.io/badge/-NumPy-013243?style=flat&logo=numpy)
 
 ## 🤝 Contributing
 
-Contributions are welcome! Feel free to:
+align="center">
+Contributions are welcome! Feel free to:mg src="https://raw.githubusercontent.com/opencv/opencv/master/samples/data/opencv-logo.png" width="40"/>
+<br />OpenCV
 
 - 🐛 Report bugs
-- 💡 Suggest features
+- 💡 Suggest features <td align="center">
+  <img src="https://raw.githubusercontent.com/google/mediapipe/master/docs/images/mediapipe_small.png" width="40"/>
+  <br />MediaPipe
+
+## 📄 License
+
+">
+<img src="https://numpy.org/images/logo.svg" width="40"/>under the MIT License - see the [LICENSE](LICENSE) file for details.
+<br />NumPy
+
+---
+
+  </tr>
+<div align="center">
+  Made with ❤️ for fitness enthusiasts
+## 🤝 Contributingiv>
+Contributions are welcome! Feel free to:- 🐛 Report bugs- 💡 Suggest features
 - 🔧 Submit pull requests
 
 ## 📄 License
