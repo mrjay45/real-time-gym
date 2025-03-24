@@ -25,6 +25,8 @@ def generate_frames(video_path):
     incorrect = 0
     state = None
     temp = 0
+    landmark_color = (245, 117, 66)  # Default orange color
+    
     with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
         while True:
             ret, frame = cap.read()
@@ -45,6 +47,14 @@ def generate_frames(video_path):
                 wrist = [landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value].x, landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value].y]
                 angle = calculate_angle(shoulder, elbow, wrist)
 
+                # Update landmark color based on form
+                if angle <= 30:  # Full curl position
+                    landmark_color = (0, 255, 0)  # Green for correct form
+                elif angle < 160 and angle > 90:  # Mid position
+                    landmark_color = (0, 0, 255)  # Red for incorrect form
+                else:
+                    landmark_color = (0, 0, 255)  # Red for starting position
+
                 # Bicep curl logic
                 if angle > 160:
                     state = "down"
@@ -60,20 +70,104 @@ def generate_frames(video_path):
                 if angle <= 30:
                     state = "up"
                     temp = angle
+
+                # Render detection with dynamic color
+                mp_drawing.draw_landmarks(
+                    image, 
+                    result.pose_landmarks, 
+                    mp_pose.POSE_CONNECTIONS,
+                    mp_drawing.DrawingSpec(color=landmark_color, thickness=2, circle_radius=2),
+                    mp_drawing.DrawingSpec(color=landmark_color, thickness=2, circle_radius=2)
+                )
+
+                # Display counts
+                cv2.rectangle(image, (image.shape[1] - 350, 0), (image.shape[1], 73), (0, 255, 0), -1)
+                cv2.putText(image, 'CORRECT', (image.shape[1] - 335, 40), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255, 255, 255), 2, cv2.LINE_AA)
+                cv2.putText(image, str(correct), (image.shape[1] - 60, 40), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255, 255, 255), 2, cv2.LINE_AA)
+
+                cv2.rectangle(image, (image.shape[1] - 350, 75), (image.shape[1], 148), (0, 0, 255), -1)
+                cv2.putText(image, 'INCORRECT', (image.shape[1] - 335, 115), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255, 255, 255), 2, cv2.LINE_AA)
+                cv2.putText(image, str(incorrect), (image.shape[1] - 60, 115), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255, 255, 255), 2, cv2.LINE_AA)
+
             except:
                 pass
 
-            # Render detection
-            mp_drawing.draw_landmarks(image, result.pose_landmarks, mp_pose.POSE_CONNECTIONS, mp_drawing.DrawingSpec(color=(245, 117, 66), thickness=2, circle_radius=2), mp_drawing.DrawingSpec(color=(245, 66, 230), thickness=2, circle_radius=2))
+            ret, buffer = cv2.imencode('.jpg', image)
+            frame = buffer.tobytes()
+            yield (b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
-            # Display counts
-            cv2.rectangle(image, (image.shape[1] - 350, 0), (image.shape[1], 73), (0, 255, 0), -1)  # Green background for correct count
-            cv2.putText(image, 'CORRECT', (image.shape[1] - 335, 40), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255, 255, 255), 2, cv2.LINE_AA)
-            cv2.putText(image, str(correct), (image.shape[1] - 60, 40), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255, 255, 255), 2, cv2.LINE_AA)
+    cap.release()
 
-            cv2.rectangle(image, (image.shape[1] - 350, 75), (image.shape[1], 148), (0, 0, 255), -1)  # Red background for incorrect count
-            cv2.putText(image, 'INCORRECT', (image.shape[1] - 335, 115), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255, 255, 255), 2, cv2.LINE_AA)
-            cv2.putText(image, str(incorrect), (image.shape[1] - 60, 115), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255, 255, 255), 2, cv2.LINE_AA)
+def generate_squats_frames(video_path):
+    cap = cv2.VideoCapture(video_path)
+    correct = 0
+    incorrect = 0
+    state = None
+    temp = 160
+    landmark_color = (0, 0, 255)  # Default orange color
+    
+    with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
+        while True:
+            ret, frame = cap.read()
+            if not ret:
+                cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
+                continue
+
+            image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            image.flags.writeable = False
+            results = pose.process(image)
+            image.flags.writeable = True
+            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+
+            try:
+                landmarks = results.pose_landmarks.landmark
+                
+                hip = [landmarks[mp_pose.PoseLandmark.LEFT_HIP.value].x, landmarks[mp_pose.PoseLandmark.LEFT_HIP.value].y]
+                knee = [landmarks[mp_pose.PoseLandmark.LEFT_KNEE.value].x, landmarks[mp_pose.PoseLandmark.LEFT_KNEE.value].y]
+                ankle = [landmarks[mp_pose.PoseLandmark.LEFT_ANKLE.value].x, landmarks[mp_pose.PoseLandmark.LEFT_ANKLE.value].y]
+                
+                angle = calculate_angle(hip, knee, ankle)
+
+                # Update landmark color based on form
+                if angle < 110:  # Deep squat position
+                    landmark_color = (0, 255, 0)  # Green for correct form
+                elif angle < 150:  # Partial squat
+                    landmark_color = (0, 0, 255)  # Red for incorrect form
+                else:
+                    landmark_color = (0, 0, 255)  # Default orange for standing
+
+                # Squats counting logic
+                if angle > 150:
+                    state = "up"
+                    if temp <= 110:
+                        correct += 1
+                    elif temp < 150 and temp > 110:
+                        incorrect += 1
+                    temp = 160
+                if angle < 110:
+                    state = "down"
+                    temp = angle
+
+                # Render detection with dynamic color
+                mp_drawing.draw_landmarks(
+                    image, 
+                    results.pose_landmarks, 
+                    mp_pose.POSE_CONNECTIONS,
+                    mp_drawing.DrawingSpec(color=landmark_color, thickness=2, circle_radius=2),
+                    mp_drawing.DrawingSpec(color=landmark_color, thickness=2, circle_radius=2)
+                )
+                
+                # Display counts
+                cv2.rectangle(image, (image.shape[1] - 350, 0), (image.shape[1], 73), (0, 255, 0), -1)
+                cv2.putText(image, 'CORRECT', (image.shape[1] - 335, 40), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255, 255, 255), 2, cv2.LINE_AA)
+                cv2.putText(image, str(correct), (image.shape[1] - 60, 40), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255, 255, 255), 2, cv2.LINE_AA)
+
+                cv2.rectangle(image, (image.shape[1] - 350, 75), (image.shape[1], 148), (0, 0, 255), -1)
+                cv2.putText(image, 'INCORRECT', (image.shape[1] - 335, 115), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255, 255, 255), 2, cv2.LINE_AA)
+                cv2.putText(image, str(incorrect), (image.shape[1] - 60, 115), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255, 255, 255), 2, cv2.LINE_AA)
+
+            except:
+                pass
 
             ret, buffer = cv2.imencode('.jpg', image)
             frame = buffer.tobytes()
@@ -83,12 +177,14 @@ def generate_frames(video_path):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', exercise_type='bicep')  # Set default exercise type
 
 @app.route('/upload', methods=['POST'])
 def upload():
     if 'video' not in request.files:
         return "No video file provided", 400
+    
+    exercise_type = request.form.get('exercise_type', 'bicep')  # Get exercise type from form
     file = request.files['video']
     if file.filename == '':
         return "No selected file", 400
@@ -99,11 +195,16 @@ def upload():
     
     video_path = os.path.join(upload_folder, file.filename)
     file.save(video_path)
-    return render_template('video.html', video_path=video_path)
+    return render_template('video.html', video_path=video_path, exercise_type=exercise_type)
 
 @app.route('/video_feed/<path:video_path>')
 def video_feed(video_path):
-    return Response(generate_frames(video_path), mimetype='multipart/x-mixed-replace; boundary=frame')
+    exercise_type = request.args.get('exercise_type', 'bicep')
+    # Use the same video path for both exercise types
+    return Response(
+        generate_squats_frames(video_path) if exercise_type == 'squats' else generate_frames(video_path),
+        mimetype='multipart/x-mixed-replace; boundary=frame'
+    )
 
 if __name__ == '__main__':
     app.run(debug=True)

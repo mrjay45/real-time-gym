@@ -11,12 +11,23 @@
         flex-direction: column;
         align-items: center;
         background-color: #f0f0f0;
+        min-height: 100vh;
       }
       .video-container {
-        margin-top: 20px;
+        margin: 20px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         border-radius: 10px;
         overflow: hidden;
+        width: 90vw;
+        height: 80vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .video-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
       }
       .back-button {
         margin-top: 20px;
@@ -31,15 +42,17 @@
       .back-button:hover {
         background-color: #0056b3;
       }
+      h1 {
+        margin: 0;
+        padding: 20px 0;
+      }
     </style>
   </head>
   <body>
-    <h1>Exercise Analysis: {{ exercise_type.title() }}</h1>
+    <h1>Exercise Analysis: {{ exercise_type|default('Bicep')|title }}</h1>
     <div class="video-container">
       <img
         src="{{ url_for('video_feed', video_path=video_path, exercise_type=exercise_type) }}"
-        width="640"
-        height="480"
       />
     </div>
     <a href="/" class="back-button">Back to Upload</a>
