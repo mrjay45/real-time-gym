@@ -21,7 +21,7 @@ Real Time Gym is a web application that uses computer vision to analyze and prov
 - Partial curl (incorrect): Arm angle between 90° and 160°
 - Starting position: Arm angle > 160°
 
-![Bicep Curl Form](outputs/video_feed 3.3.png)
+![Bicep Curl Form](/outputs/bicep_curl_form.png)
 
 ### Squats
 
@@ -29,7 +29,7 @@ Real Time Gym is a web application that uses computer vision to analyze and prov
 - Partial squat (incorrect): Knee angle between 110° and 150°
 - Standing position: Knee angle > 150°
 
-![Squat Form](outputs/video_feed 5.png)
+![Squat Form](/outputs/squat_form.png)
 
 ## Setup and Usage
 
