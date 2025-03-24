@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Pose Estimation</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: url("https://source.unsplash.com/1600x900/?fitness,gym")
+          no-repeat center center fixed;
+        background-size: cover;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+      .container {
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        max-width: 400px;
+        width: 100%;
+      }
+      h1 {
+        color: #333;
+        margin-bottom: 20px;
+      }
+      form {
+        margin-top: 20px;
+      }
+      .file-input {
+        display: none;
+      }
+      .file-label {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      .file-label:hover {
+        background-color: #0056b3;
+      }
+      .file-name {
+        margin-top: 10px;
+        color: #333;
+        font-size: 14px;
+      }
+      input[type="submit"] {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 20px;
+        font-size: 16px;
+      }
+      input[type="submit"]:hover {
+        background-color: #218838;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Pose Estimation</h1>
+      <form action="/upload" method="post" enctype="multipart/form-data">
+        <div style="margin-bottom: 20px">
+          <label style="display: block; margin-bottom: 10px"
+            >Select Exercise Type:</label
+          >
+          <select
+            name="exercise_type"
+            style="padding: 8px; border-radius: 5px; width: 200px"
+          >
+            <option value="bicep">Bicep Curls</option>
+            <option value="squats">Squats</option>
+          </select>
+        </div>
+        <label for="file-upload" class="file-label">Choose File</label>
+        <input
+          id="file-upload"
+          class="file-input"
+          type="file"
+          name="video"
+          accept="video/*"
+          onchange="showFileName()"
+        />
+        <div id="file-name" class="file-name"></div>
+        <input type="submit" value="Upload Video" />
+      </form>
+    </div>
+    <script>
+      function showFileName() {
+        var input = document.getElementById("file-upload");
+        var fileName = input.files[0].name;
+        document.getElementById("file-name").textContent = fileName;
+      }
+    </script>
+  </body>
+</html>

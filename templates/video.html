@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Exercise Analysis</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: #f0f0f0;
+      }
+      .video-container {
+        margin-top: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      .back-button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+      }
+      .back-button:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Exercise Analysis: {{ exercise_type.title() }}</h1>
+    <div class="video-container">
+      <img
+        src="{{ url_for('video_feed', video_path=video_path, exercise_type=exercise_type) }}"
+        width="640"
+        height="480"
+      />
+    </div>
+    <a href="/" class="back-button">Back to Upload</a>
+  </body>
+</html>

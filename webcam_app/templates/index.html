@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Pose Estimation</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        height: 100vh;
+        margin: 0;
+        background: linear-gradient(to bottom right, #ffffff 50%, #f0f0f0 50%);
+      }
+      .container {
+        padding-top: 3vmax;
+        flex-wrap: wrap;
+        text-align: center;
+        width: 99vw;
+        height: fit-content;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        gap: 5vmax;
+      }
+      h1 {
+        color: #333;
+        margin: 0 20px;
+        font-size: 3vmax;
+        font-family: "Pacifico", "Segoe UI", Tahoma, Geneva, Verdana;
+      }
+      img {
+        margin-top: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .card {
+        background-color: #333;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s, background-color 0.2s;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+        height: fit-content;
+      }
+      .card:hover {
+        transform: translateY(-2px);
+      }
+      .card img {
+        border-radius: 10px;
+        max-width: 100%;
+        height: 50vh;
+      }
+      .card-title {
+        font-size: 32px;
+        margin-top: 10px;
+        font-weight: 700;
+        color: #fff;
+      }
+
+      .video-feed {
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+        width: 73%;
+        height: 80vh;
+      }
+
+      .exit-button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        font-size: 18px;
+        font-weight: 600;
+        color: #fff;
+        background-color: #333;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+      .exit-button:hover {
+        background-color: #555;
+      }
+    </style>
+    <script>
+      function startVideoFeed(type) {
+        document
+          .querySelectorAll(".card")
+          .forEach((card) => (card.style.display = "none"));
+        document.querySelector(".video-feed").style.display = "block";
+        document.querySelector(".exit-button").style.display = "block";
+
+        if (type === "bicep") {
+          document.querySelector(".video-feed").src =
+            "{{ url_for('video_feed') }}";
+        } else if (type === "squats") {
+          document.querySelector(".video-feed").src =
+            "{{ url_for('squats_feed') }}";
+        }
+      }
+
+      async function exitVideoFeed() {
+        // Reset both exercise counts
+        await Promise.all([
+          fetch("{{ url_for('reset_counts') }}"),
+          fetch("{{ url_for('reset_squats_counts') }}"),
+        ]);
+
+        document.querySelector(".video-feed").style.display = "none";
+        document.querySelector(".exit-button").style.display = "none";
+        document
+          .querySelectorAll(".card")
+          .forEach((card) => (card.style.display = "flex"));
+      }
+    </script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+    </style>
+  </head>
+  <body>
+    <h1>Pose Estimation</h1>
+    <div class="container">
+      <div class="card" onclick="startVideoFeed('bicep')">
+        <img
+          src="{{ url_for('static', filename='images/bisep_curl.jpg') }}"
+          alt="Bicep Curl"
+        />
+        <div class="card-title">Start Bicep Curl</div>
+      </div>
+      <div class="card" onclick="startVideoFeed('squats')">
+        <img
+          src="{{ url_for('static', filename='images/squats.jpg') }}"
+          alt="Squats"
+        />
+        <div class="card-title">Start Squats</div>
+      </div>
+      <img class="video-feed" style="display: none" />
+      <button
+        class="exit-button"
+        onclick="exitVideoFeed()"
+        style="display: none"
+      >
+        Exit
+      </button>
+    </div>
+    <!-- <div class="container">
+      <div class="exercise-section">
+        <h2>Bicep Curls</h2>
+        <img src="{{ url_for('video_feed') }}" width="640" height="480" />
+        <br />
+        <button onclick="resetCounts()">Reset Bicep Counts</button>
+      </div>
+
+      <div class="exercise-section">
+        <h2>Squats</h2>
+        <img src="{{ url_for('squats_feed') }}" width="640" height="480" />
+        <br />
+        <button onclick="resetSquatsCounts()">Reset Squats Counts</button>
+      </div>
+    </div> -->
+
+    <script>
+      function resetCounts() {
+        fetch("/reset_counts");
+      }
+
+      function resetSquatsCounts() {
+        fetch("/reset_squats_counts");
+      }
+    </script>
+  </body>
+</html>
