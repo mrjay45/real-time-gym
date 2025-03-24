@@ -1,84 +1,57 @@
-# 🏋️‍♂️ AI Gym Trainer Pro
+# Real Time Gym - AI Exercise Form Tracker
 
-> Your Personal AI-Powered Fitness Coach That Never Sleeps!
+Real Time Gym is a web application that uses computer vision to analyze and provide real-time feedback on exercise form. Currently supports bicep curls and squats tracking.
 
-![Python Version](https://img.shields.io/badge/python-3.7+-blue.svg)
-![License](https://img.shields.io/badge/license-MIT-green.svg)
+## Features
 
-## 🎯 What's This All About?
+- Real-time exercise form detection
+- Counts correct and incorrect repetitions
+- Visual feedback with color-coded pose tracking
+  - Green: Correct form
+  - Red: Incorrect form
+- Supports multiple exercises:
+  - Bicep Curls
+  - Squats
 
-Turn your computer into a smart fitness companion! Using cutting-edge computer vision,
-this app watches your form and helps you perfect those reps. It's like having a
-personal trainer, minus the awkward small talk!
+## Exercise Form Guidelines
 
-## 🌟 Features That'll Blow Your Mind
+### Bicep Curls
 
-🎥 **Real-time Form Analysis**
+- Full curl (correct): Arm angle ≤ 30°
+- Partial curl (incorrect): Arm angle between 90° and 160°
+- Starting position: Arm angle > 160°
 
-- Watches your every move (in a non-creepy way)
-- Gives instant feedback on your form
-- Counts reps better than your gym buddy
+![Bicep Curl Form](outputs/bicep_curl.jpg)
 
-🏋️ **Supported Exercises**
+### Squats
 
-- Bicep Curls (for those beach muscles)
-- Squats (never skip leg day!)
+- Deep squat (correct): Knee angle < 110°
+- Partial squat (incorrect): Knee angle between 110° and 150°
+- Standing position: Knee angle > 150°
 
-🚦 **Smart Feedback System**
+![Squat Form](outputs/squat.jpg)
 
-- Green = You're crushing it!
-- Red = Need some tweaking
-- Real-time rep counting (and it can't be bribed)
+## Setup and Usage
 
-## 🚀 Quick Start Guide
+1. Install required dependencies:
 
 ```bash
-# Clone this bad boy
-git clone [your-repo-url]
+pip install flask opencv-python mediapipe numpy
+```
 
-# Jump into the future of fitness
-cd real-time-gym
+2. Run the application:
 
-# Set up your virtual gym (environment)
-python -m venv venv
-source venv/bin/activate  # Linux/Mac
-venv\Scripts\activate     # Windows
-
-# Get buff (install dependencies)
-pip install -r requirements.txt
-
-# Launch your personal trainer
-cd webcam_app
+```bash
 python app.py
 ```
 
-## 🎮 How to Use
+3. Open a web browser and navigate to `http://localhost:5000`
+4. Upload a video file and select the exercise type
+5. The application will process the video and provide real-time feedback
 
-1. 🎯 Fire up your webcam
-2. 🎥 Strike a pose
-3. 💪 Start exercising
-4. 📊 Watch the magic happen
+## Technologies Used
 
-## 🛠 Tech Stack
-
-- 🐍 Python 3.7+
-- 🎥 OpenCV
-- 🤖 MediaPipe
-- 🌶 Flask
-- 🔢 NumPy
-
-## 💡 Pro Tips
-
-- Good lighting = Better tracking
-- Wear contrasting clothes
-- Keep your full body in frame
-- No excuses, just results!
-
-## 🤝 Contributing
-
-Got ideas? We're all ears! Fork, improve, and PR.
-Let's make this the best AI trainer out there!
-
-## ⚖️ License
-
-MIT License - Go wild! (Just don't forget to credit us)
+- Flask
+- OpenCV
+- MediaPipe
+- NumPy
