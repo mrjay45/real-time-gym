@@ -1,4 +1,4 @@
 Flask==2.3.2
-opencv-python==4.5.5.64
+opencv-python-headless
 mediapipe
 numpy==1.21.4
